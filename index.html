@@ -3,256 +3,204 @@
 <html lang="nl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Vraag Flowchart</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
-
-- { box-sizing: border-box; margin: 0; padding: 0; }
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
 background: #0d0d0d;
 font-family: ‘Nunito’, sans-serif;
 display: flex;
-justify-content: center;
-align-items: flex-start;
+flex-direction: column;
+align-items: center;
+padding: 32px 16px 48px;
 min-height: 100vh;
-padding: 40px 20px;
 }
 
-.canvas {
-position: relative;
-width: 560px;
+h1 {
+color: #fff;
+font-size: 19px;
+font-weight: 900;
+text-align: center;
+margin-bottom: 6px;
+text-shadow: 0 0 20px #00e5ff66;
+}
+.subtitle {
+font-size: 11px;
+color: #ffffff44;
+margin-bottom: 28px;
+font-weight: 600;
+font-style: italic;
+text-align: center;
 }
 
-/* ── SVG arrows layer ── */
-svg.arrows {
-position: absolute;
-top: 0; left: 0;
-width: 100%; height: 100%;
-pointer-events: none;
-overflow: visible;
-}
-
-/* ── nodes ── */
-.node {
-position: absolute;
-border-radius: 14px;
-border: 2px dashed;
+.flow {
 display: flex;
 flex-direction: column;
 align-items: center;
+width: 100%;
+max-width: 360px;
+}
+
+.node {
+width: 100%;
+background: #1a1a2e;
+border-radius: 14px;
+border: 2px dashed;
+padding: 14px 18px;
+display: flex;
+flex-direction: column;
+align-items: center;
+text-align: center;
+gap: 5px;
+color: #fff;
+}
+.node .icon  { font-size: 30px; }
+.node .title { font-size: 14px; font-weight: 800; line-height: 1.35; }
+.node .sub   { font-size: 11px; font-weight: 600; opacity: 0.6; font-style: italic; }
+
+.cyan   { border-color:#00e5ff; box-shadow:0 0 18px #00e5ff33; }
+.yellow { border-color:#ffd32a; box-shadow:0 0 18px #ffd32a33; }
+.green  { border-color:#7bed9f; box-shadow:0 0 18px #7bed9f33; }
+.red    { border-color:#ff4757; box-shadow:0 0 18px #ff475733; }
+
+.diamond-outer { width:100%; display:flex; justify-content:center; }
+.diamond {
+width: 82%;
+padding: 26px 30px;
+background: #1a1a2e;
+border: 2px dashed #ff6b35;
+box-shadow: 0 0 16px #ff6b3533;
+clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+display: flex;
+align-items: center;
 justify-content: center;
 text-align: center;
-padding: 12px 16px;
-font-weight: 700;
-font-size: 14px;
-line-height: 1.3;
-color: #fff;
-gap: 6px;
 }
+.diamond .title { font-size: 12.5px; font-weight: 800; color:#fff; line-height:1.35; }
 
-.node .icon { font-size: 32px; }
-.node .label { font-size: 13px; font-weight: 800; letter-spacing: 0.3px; }
-.node .sublabel { font-size: 11px; font-weight: 600; opacity: 0.75; }
+.arrow { display:flex; flex-direction:column; align-items:center; margin:2px 0; }
+.arrow-line { width:2px; height:22px; border-left:2px dashed; }
+.arrow-head { width:0;height:0; border-left:7px solid transparent; border-right:7px solid transparent; border-top:10px solid; margin-top:-1px; }
+.arr-cyan   .arrow-line{border-color:#00e5ff;} .arr-cyan   .arrow-head{border-top-color:#00e5ff;}
+.arr-orange .arrow-line{border-color:#ff6b35;} .arr-orange .arrow-head{border-top-color:#ff6b35;}
+.arr-green  .arrow-line{border-color:#7bed9f;} .arr-green  .arrow-head{border-top-color:#7bed9f;}
+.arr-red    .arrow-line{border-color:#ff4757;} .arr-red    .arrow-head{border-top-color:#ff4757;}
 
-/* colour variants */
-.node.start   { background: #1a1a2e; border-color: #00e5ff; box-shadow: 0 0 18px #00e5ff44; }
-.node.diamond { background: #1a1a2e; border-color: #ff6b35; box-shadow: 0 0 18px #ff6b3544; border-radius: 0; transform: rotate(45deg); }
-.node.diamond .inner { transform: rotate(-45deg); display:flex;flex-direction:column;align-items:center;gap:4px; }
-.node.action  { background: #1a1a2e; border-color: #7bed9f; box-shadow: 0 0 18px #7bed9f33; }
-.node.info    { background: #1a1a2e; border-color: #a29bfe; box-shadow: 0 0 18px #a29bfe33; }
-.node.end-yes { background: #1a1a2e; border-color: #ffd32a; box-shadow: 0 0 18px #ffd32a44; }
+.arrow-label { font-size:11px; font-weight:800; padding:2px 9px; border-radius:20px; margin-bottom:2px; }
+.lbl-green  { background:#7bed9f22; color:#7bed9f; border:1px solid #7bed9f66; }
+.lbl-orange { background:#ff6b3522; color:#ff6b35; border:1px solid #ff6b3566; }
+.lbl-red    { background:#ff475722; color:#ff4757; border:1px solid #ff475766; }
 
-/* arrow labels */
-.arrow-label {
-position: absolute;
-font-family: ‘Nunito’, sans-serif;
-font-size: 11px;
-font-weight: 800;
-padding: 2px 7px;
-border-radius: 20px;
-pointer-events: none;
-}
-.al-cyan  { background:#00e5ff22; color:#00e5ff; border:1px solid #00e5ff66; }
-.al-red   { background:#ff6b3522; color:#ff6b35; border:1px solid #ff6b3566; }
-.al-green { background:#7bed9f22; color:#7bed9f; border:1px solid #7bed9f66; }
+.loop-block { width:100%; display:flex; align-items:stretch; gap:0; margin:2px 0; }
+.loop-rail { width:36px; flex-shrink:0; display:flex; flex-direction:column; align-items:center; }
+.rail-line { flex:1; width:2px; border-left:2px dashed #ff6b35; }
+.rail-label { font-size:10px; font-weight:800; padding:2px 5px; border-radius:20px; color:#ff6b35; background:#ff6b3522; border:1px solid #ff6b3566; white-space:nowrap; writing-mode:vertical-lr; transform:rotate(180deg); margin:4px 0; }
+.rail-arrow-up { width:0;height:0; border-left:7px solid transparent; border-right:7px solid transparent; border-bottom:10px solid #ff6b35; }
+.loop-content { flex:1; display:flex; flex-direction:column; gap:0; }
+.side-note { background:#1a1a2e; border:1px dashed #ff6b3577; border-radius:10px; padding:8px 12px; font-size:11px; font-weight:700; color:#ff6b35; text-align:center; line-height:1.5; margin-top:4px; font-style:italic; }
 
-/* title */
-.chart-title {
-color: #fff;
-font-size: 22px;
-font-weight: 800;
-text-align: center;
-margin-bottom: 20px;
-letter-spacing: 0.5px;
-text-shadow: 0 0 20px #00e5ff66;
-}
+footer { margin-top:32px; font-size:11px; color:#ffffff22; text-align:center; font-style:italic; }
 </style>
 
 </head>
 <body>
 
-<div>
-  <div class="chart-title">Vraag Stellen Flowchart</div>
+<h1>Hoe stel je mij een vraag? 🤨</h1>
+<p class="subtitle">een stroomdiagram voor mensen die<br>nog nooit Google hebben gehoord</p>
 
-  <!-- The actual chart is rendered as SVG for precise control -->
+<div class="flow">
 
-  <svg width="560" height="860" viewBox="0 0 560 860" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto;">
-    <defs>
-      <!-- Arrow markers -->
-      <marker id="arr-cyan" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-        <polygon points="0 0, 10 3.5, 0 7" fill="#00e5ff"/>
-      </marker>
-      <marker id="arr-orange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-        <polygon points="0 0, 10 3.5, 0 7" fill="#ff6b35"/>
-      </marker>
-      <marker id="arr-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-        <polygon points="0 0, 10 3.5, 0 7" fill="#7bed9f"/>
-      </marker>
-      <marker id="arr-purple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-        <polygon points="0 0, 10 3.5, 0 7" fill="#a29bfe"/>
-      </marker>
-      <marker id="arr-yellow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-        <polygon points="0 0, 10 3.5, 0 7" fill="#ffd32a"/>
-      </marker>
+  <div class="node cyan">
+    <span class="icon">🤔</span>
+    <span class="title">Ik heb een vraag</span>
+    <span class="sub">wow, wat een begin</span>
+  </div>
 
-```
-  <!-- Glow filters -->
-  <filter id="glow-cyan">
-    <feGaussianBlur stdDeviation="3" result="blur"/>
-    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-  </filter>
-  <filter id="glow-orange">
-    <feGaussianBlur stdDeviation="3" result="blur"/>
-    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-  </filter>
-</defs>
+  <div class="arrow arr-cyan"><div class="arrow-line"></div><div class="arrow-head"></div></div>
 
-<!-- ══════════════════════════════════
-     NODE 1 — START
-     centre x=280, top y=20, w=200 h=80
-═══════════════════════════════════ -->
-<rect x="180" y="20" width="200" height="84" rx="14" fill="#1a1a2e" stroke="#00e5ff" stroke-width="2" stroke-dasharray="6 3" filter="url(#glow-cyan)"/>
-<text x="280" y="52" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="30" fill="#00e5ff">💬</text>
-<text x="280" y="76" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="13" fill="#fff">Ik heb een vraag</text>
-<text x="280" y="93" text-anchor="middle" font-family="Nunito" font-weight="600" font-size="11" fill="#ffffffaa">START</text>
+  <div class="loop-block">
+    <div class="loop-rail">
+      <div class="rail-line"></div>
+      <div class="rail-label">Nee 😑</div>
+      <div class="rail-line"></div>
+      <div class="rail-arrow-up"></div>
+    </div>
+    <div class="loop-content">
+      <div class="diamond-outer">
+        <div class="diamond">
+          <span class="title">Heb je er zelf<br>al over nagedacht?</span>
+        </div>
+      </div>
+      <div class="side-note">Ga zitten. Denk na.<br>Je kunt dit. Echt. 🌱</div>
+    </div>
+  </div>
 
-<!-- Arrow down to diamond 1 -->
-<line x1="280" y1="104" x2="280" y2="158" stroke="#00e5ff" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#arr-cyan)"/>
+  <div class="arrow arr-green">
+    <div class="arrow-label lbl-green">Ja, echt!</div>
+    <div class="arrow-line"></div>
+    <div class="arrow-head"></div>
+  </div>
 
-<!-- ══════════════════════════════════
-     NODE 2 — DIAMOND 1
-     centre 280,205  diamond w=180 h=90
-═══════════════════════════════════ -->
-<polygon points="280,158 390,205 280,252 170,205" fill="#1a1a2e" stroke="#ff6b35" stroke-width="2" stroke-dasharray="6 3" filter="url(#glow-orange)"/>
-<text x="280" y="196" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="12" fill="#fff">Heb je zelf al</text>
-<text x="280" y="212" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="12" fill="#fff">nagedacht?</text>
+  <div class="diamond-outer">
+    <div class="diamond">
+      <span class="title">Heb je het al<br>aan AI gevraagd?</span>
+    </div>
+  </div>
 
-<!-- YES arrow down -->
-<line x1="280" y1="252" x2="280" y2="296" stroke="#7bed9f" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#arr-green)"/>
-<!-- YES label -->
-<rect x="250" y="261" width="36" height="18" rx="9" fill="#7bed9f22" stroke="#7bed9f66" stroke-width="1"/>
-<text x="268" y="274" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="11" fill="#7bed9f">Ja</text>
+  <div class="arrow arr-orange">
+    <div class="arrow-label lbl-orange">Nee...</div>
+    <div class="arrow-line"></div>
+    <div class="arrow-head"></div>
+  </div>
 
-<!-- NO arrow left → loop back -->
-<line x1="170" y1="205" x2="90" y2="205" stroke="#ff6b35" stroke-width="2" stroke-dasharray="5 3"/>
-<line x1="90" y1="205" x2="90" y2="62" stroke="#ff6b35" stroke-width="2" stroke-dasharray="5 3"/>
-<line x1="90" y1="62" x2="179" y2="62" stroke="#ff6b35" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#arr-orange)"/>
-<!-- NO label -->
-<rect x="108" y="193" width="36" height="18" rx="9" fill="#ff6b3522" stroke="#ff6b3566" stroke-width="1"/>
-<text x="126" y="206" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="11" fill="#ff6b35">Nee</text>
-<!-- loop annotation -->
-<rect x="22" y="112" width="60" height="52" rx="10" fill="#1a1a2e" stroke="#ff6b35" stroke-width="1.5" stroke-dasharray="4 2"/>
-<text x="52" y="132" text-anchor="middle" font-family="Nunito" font-weight="700" font-size="10" fill="#ff6b35">Eerst zelf</text>
-<text x="52" y="146" text-anchor="middle" font-family="Nunito" font-weight="700" font-size="10" fill="#ff6b35">nadenken</text>
-<text x="52" y="158" text-anchor="middle" font-family="Nunito" font-weight="700" font-size="10" fill="#ff6b35">→ terug</text>
+  <div class="node yellow">
+    <span class="icon">🤖</span>
+    <span class="title">Vraag het gewoon aan AI</span>
+    <span class="sub">het antwoord is letterlijk één zoekopdracht ver</span>
+  </div>
 
-<!-- ══════════════════════════════════
-     NODE 3 — DIAMOND 2
-     centre 280,348
-═══════════════════════════════════ -->
-<polygon points="280,296 400,348 280,400 160,348" fill="#1a1a2e" stroke="#ff6b35" stroke-width="2" stroke-dasharray="6 3" filter="url(#glow-orange)"/>
-<text x="280" y="339" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="12" fill="#fff">Kan AI jouw</text>
-<text x="280" y="355" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="12" fill="#fff">vraag beantwoorden?</text>
+  <div class="arrow arr-green">
+    <div class="arrow-label lbl-green">Ja, gedaan</div>
+    <div class="arrow-line"></div>
+    <div class="arrow-head"></div>
+  </div>
 
-<!-- YES arrow right → AI node -->
-<line x1="400" y1="348" x2="462" y2="348" stroke="#7bed9f" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#arr-green)"/>
-<!-- YES label -->
-<rect x="406" y="337" width="36" height="18" rx="9" fill="#7bed9f22" stroke="#7bed9f66" stroke-width="1"/>
-<text x="424" y="350" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="11" fill="#7bed9f">Ja</text>
+  <div class="diamond-outer">
+    <div class="diamond">
+      <span class="title">Snapte je<br>het antwoord?</span>
+    </div>
+  </div>
 
-<!-- NO arrow down -->
-<line x1="280" y1="400" x2="280" y2="450" stroke="#ff6b35" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#arr-orange)"/>
-<!-- NO label -->
-<rect x="250" y="414" width="36" height="18" rx="9" fill="#ff6b3522" stroke="#ff6b3566" stroke-width="1"/>
-<text x="268" y="427" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="11" fill="#ff6b35">Nee</text>
+  <div class="arrow arr-green">
+    <div class="arrow-label lbl-green">Ja 🎉</div>
+    <div class="arrow-line"></div>
+    <div class="arrow-head"></div>
+  </div>
 
-<!-- ══════════════════════════════════
-     NODE 4 — AI box (right side, YES branch)
-     x=462 centre, y=295 top, w=170 h=110
-═══════════════════════════════════ -->
-<rect x="462" y="298" width="170" height="100" rx="14" fill="#1a1a2e" stroke="#ffd32a" stroke-width="2" stroke-dasharray="6 3" filter="url(#glow-cyan)"/>
-<text x="547" y="328" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="28" fill="#ffd32a">🤖</text>
-<text x="547" y="353" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="12" fill="#fff">Stel je vraag aan AI</text>
-<text x="547" y="371" text-anchor="middle" font-family="Nunito" font-weight="600" font-size="10.5" fill="#ffffffaa">niet aan mij 😉</text>
-<text x="547" y="388" text-anchor="middle" font-family="Nunito" font-weight="600" font-size="10.5" fill="#ffffffaa">END</text>
+  <div class="node green">
+    <span class="icon">✅</span>
+    <span class="title">Mooi. Je hebt het zelf opgelost.</span>
+    <span class="sub">zie je wel dat je het kon?</span>
+  </div>
 
-<!-- ══════════════════════════════════
-     NODE 5 — TRY AI action
-     centre 280, y=450 top, w=260 h=95
-═══════════════════════════════════ -->
-<rect x="150" y="450" width="260" height="95" rx="14" fill="#1a1a2e" stroke="#a29bfe" stroke-width="2" stroke-dasharray="6 3"/>
-<text x="280" y="480" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="26" fill="#a29bfe">🔎</text>
-<text x="280" y="502" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="12" fill="#fff">Probeer het toch aan AI te vragen</text>
-<text x="280" y="520" text-anchor="middle" font-family="Nunito" font-weight="600" font-size="10.5" fill="#ffffffaa">Als het echt niet lukt → ga verder</text>
-<text x="280" y="534" text-anchor="middle" font-family="Nunito" font-weight="600" font-size="10.5" fill="#ffffffaa">Anders: klaar! ✅</text>
+  <div class="arrow arr-red">
+    <div class="arrow-label lbl-red">Nee 😩</div>
+    <div class="arrow-line"></div>
+    <div class="arrow-head"></div>
+  </div>
 
-<!-- Arrow down to diamond 3 -->
-<line x1="280" y1="545" x2="280" y2="594" stroke="#a29bfe" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#arr-purple)"/>
+  <div class="node red">
+    <span class="icon">🙋</span>
+    <span class="title">Oké. Kom maar. Ik help je.</span>
+    <span class="sub">maar stuur je AI-antwoord even mee aub</span>
+  </div>
 
-<!-- ══════════════════════════════════
-     NODE 6 — DIAMOND 3: Lukte het?
-     centre 280,640
-═══════════════════════════════════ -->
-<polygon points="280,594 400,640 280,686 160,640" fill="#1a1a2e" stroke="#ff6b35" stroke-width="2" stroke-dasharray="6 3" filter="url(#glow-orange)"/>
-<text x="280" y="633" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="12" fill="#fff">Lukte het</text>
-<text x="280" y="649" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="12" fill="#fff">met AI?</text>
-
-<!-- YES arrow right → done -->
-<line x1="400" y1="640" x2="462" y2="640" stroke="#7bed9f" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#arr-green)"/>
-<rect x="407" y="629" width="36" height="18" rx="9" fill="#7bed9f22" stroke="#7bed9f66" stroke-width="1"/>
-<text x="425" y="642" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="11" fill="#7bed9f">Ja</text>
-
-<!-- YES / done node -->
-<rect x="462" y="596" width="130" height="88" rx="14" fill="#1a1a2e" stroke="#7bed9f" stroke-width="2" stroke-dasharray="6 3"/>
-<text x="527" y="626" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="28" fill="#7bed9f">✅</text>
-<text x="527" y="648" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="12" fill="#fff">Klaar!</text>
-<text x="527" y="664" text-anchor="middle" font-family="Nunito" font-weight="600" font-size="10.5" fill="#ffffffaa">Vraag beantwoord</text>
-<text x="527" y="677" text-anchor="middle" font-family="Nunito" font-weight="600" font-size="10.5" fill="#ffffffaa">END</text>
-
-<!-- NO arrow down → come back node -->
-<line x1="280" y1="686" x2="280" y2="734" stroke="#ff6b35" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#arr-orange)"/>
-<rect x="250" y="698" width="36" height="18" rx="9" fill="#ff6b3522" stroke="#ff6b3566" stroke-width="1"/>
-<text x="268" y="711" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="11" fill="#ff6b35">Nee</text>
-
-<!-- ══════════════════════════════════
-     NODE 7 — Kom terug
-     centre 280, y=734 top, w=260 h=90
-═══════════════════════════════════ -->
-<rect x="150" y="734" width="260" height="90" rx="14" fill="#1a1a2e" stroke="#00e5ff" stroke-width="2" stroke-dasharray="6 3" filter="url(#glow-cyan)"/>
-<text x="280" y="762" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="28" fill="#00e5ff">🙋</text>
-<text x="280" y="785" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="12" fill="#fff">Kom terug &amp; stel je vraag</text>
-<text x="280" y="800" text-anchor="middle" font-family="Nunito" font-weight="600" font-size="10.5" fill="#ffffffaa">opnieuw aan mij</text>
-<text x="280" y="815" text-anchor="middle" font-family="Nunito" font-weight="600" font-size="10.5" fill="#ffffffaa">END</text>
-
-<!-- title / watermark -->
-<rect x="10" y="826" width="540" height="26" rx="6" fill="#1a1a2e"/>
-<text x="280" y="844" text-anchor="middle" font-family="Nunito" font-weight="600" font-size="11" fill="#ffffff55">Vraag Stellen Protocol • door AI Flowchart</text>
-```
-
-  </svg>
 </div>
+
+<footer>© PG: geen idee waarom je dit niet gewoon aan AI vroeg</footer>
 
 </body>
 </html>
