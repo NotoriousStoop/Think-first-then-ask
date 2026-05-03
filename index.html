@@ -1,31 +1,258 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+
+<html lang="nl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Think First. Then Ask AI.</title>
-  <meta name="theme-color" content="#0a1f3d">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vraag Flowchart</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
 
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background: #000;
-    }
+- { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body {
-      background: url("IMG_6499.jpeg") no-repeat center center;
-      background-size: cover;
-      opacity: 0;
-      animation: fadeIn 1.5s ease-out forwards;
-    }
+body {
+background: #0d0d0d;
+font-family: ‘Nunito’, sans-serif;
+display: flex;
+justify-content: center;
+align-items: flex-start;
+min-height: 100vh;
+padding: 40px 20px;
+}
 
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
-  </style>
+.canvas {
+position: relative;
+width: 560px;
+}
+
+/* ── SVG arrows layer ── */
+svg.arrows {
+position: absolute;
+top: 0; left: 0;
+width: 100%; height: 100%;
+pointer-events: none;
+overflow: visible;
+}
+
+/* ── nodes ── */
+.node {
+position: absolute;
+border-radius: 14px;
+border: 2px dashed;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+text-align: center;
+padding: 12px 16px;
+font-weight: 700;
+font-size: 14px;
+line-height: 1.3;
+color: #fff;
+gap: 6px;
+}
+
+.node .icon { font-size: 32px; }
+.node .label { font-size: 13px; font-weight: 800; letter-spacing: 0.3px; }
+.node .sublabel { font-size: 11px; font-weight: 600; opacity: 0.75; }
+
+/* colour variants */
+.node.start   { background: #1a1a2e; border-color: #00e5ff; box-shadow: 0 0 18px #00e5ff44; }
+.node.diamond { background: #1a1a2e; border-color: #ff6b35; box-shadow: 0 0 18px #ff6b3544; border-radius: 0; transform: rotate(45deg); }
+.node.diamond .inner { transform: rotate(-45deg); display:flex;flex-direction:column;align-items:center;gap:4px; }
+.node.action  { background: #1a1a2e; border-color: #7bed9f; box-shadow: 0 0 18px #7bed9f33; }
+.node.info    { background: #1a1a2e; border-color: #a29bfe; box-shadow: 0 0 18px #a29bfe33; }
+.node.end-yes { background: #1a1a2e; border-color: #ffd32a; box-shadow: 0 0 18px #ffd32a44; }
+
+/* arrow labels */
+.arrow-label {
+position: absolute;
+font-family: ‘Nunito’, sans-serif;
+font-size: 11px;
+font-weight: 800;
+padding: 2px 7px;
+border-radius: 20px;
+pointer-events: none;
+}
+.al-cyan  { background:#00e5ff22; color:#00e5ff; border:1px solid #00e5ff66; }
+.al-red   { background:#ff6b3522; color:#ff6b35; border:1px solid #ff6b3566; }
+.al-green { background:#7bed9f22; color:#7bed9f; border:1px solid #7bed9f66; }
+
+/* title */
+.chart-title {
+color: #fff;
+font-size: 22px;
+font-weight: 800;
+text-align: center;
+margin-bottom: 20px;
+letter-spacing: 0.5px;
+text-shadow: 0 0 20px #00e5ff66;
+}
+</style>
+
 </head>
 <body>
+
+<div>
+  <div class="chart-title">Vraag Stellen Flowchart</div>
+
+  <!-- The actual chart is rendered as SVG for precise control -->
+
+  <svg width="560" height="860" viewBox="0 0 560 860" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto;">
+    <defs>
+      <!-- Arrow markers -->
+      <marker id="arr-cyan" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#00e5ff"/>
+      </marker>
+      <marker id="arr-orange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#ff6b35"/>
+      </marker>
+      <marker id="arr-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#7bed9f"/>
+      </marker>
+      <marker id="arr-purple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#a29bfe"/>
+      </marker>
+      <marker id="arr-yellow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#ffd32a"/>
+      </marker>
+
+```
+  <!-- Glow filters -->
+  <filter id="glow-cyan">
+    <feGaussianBlur stdDeviation="3" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="glow-orange">
+    <feGaussianBlur stdDeviation="3" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+</defs>
+
+<!-- ══════════════════════════════════
+     NODE 1 — START
+     centre x=280, top y=20, w=200 h=80
+═══════════════════════════════════ -->
+<rect x="180" y="20" width="200" height="84" rx="14" fill="#1a1a2e" stroke="#00e5ff" stroke-width="2" stroke-dasharray="6 3" filter="url(#glow-cyan)"/>
+<text x="280" y="52" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="30" fill="#00e5ff">💬</text>
+<text x="280" y="76" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="13" fill="#fff">Ik heb een vraag</text>
+<text x="280" y="93" text-anchor="middle" font-family="Nunito" font-weight="600" font-size="11" fill="#ffffffaa">START</text>
+
+<!-- Arrow down to diamond 1 -->
+<line x1="280" y1="104" x2="280" y2="158" stroke="#00e5ff" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#arr-cyan)"/>
+
+<!-- ══════════════════════════════════
+     NODE 2 — DIAMOND 1
+     centre 280,205  diamond w=180 h=90
+═══════════════════════════════════ -->
+<polygon points="280,158 390,205 280,252 170,205" fill="#1a1a2e" stroke="#ff6b35" stroke-width="2" stroke-dasharray="6 3" filter="url(#glow-orange)"/>
+<text x="280" y="196" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="12" fill="#fff">Heb je zelf al</text>
+<text x="280" y="212" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="12" fill="#fff">nagedacht?</text>
+
+<!-- YES arrow down -->
+<line x1="280" y1="252" x2="280" y2="296" stroke="#7bed9f" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#arr-green)"/>
+<!-- YES label -->
+<rect x="250" y="261" width="36" height="18" rx="9" fill="#7bed9f22" stroke="#7bed9f66" stroke-width="1"/>
+<text x="268" y="274" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="11" fill="#7bed9f">Ja</text>
+
+<!-- NO arrow left → loop back -->
+<line x1="170" y1="205" x2="90" y2="205" stroke="#ff6b35" stroke-width="2" stroke-dasharray="5 3"/>
+<line x1="90" y1="205" x2="90" y2="62" stroke="#ff6b35" stroke-width="2" stroke-dasharray="5 3"/>
+<line x1="90" y1="62" x2="179" y2="62" stroke="#ff6b35" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#arr-orange)"/>
+<!-- NO label -->
+<rect x="108" y="193" width="36" height="18" rx="9" fill="#ff6b3522" stroke="#ff6b3566" stroke-width="1"/>
+<text x="126" y="206" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="11" fill="#ff6b35">Nee</text>
+<!-- loop annotation -->
+<rect x="22" y="112" width="60" height="52" rx="10" fill="#1a1a2e" stroke="#ff6b35" stroke-width="1.5" stroke-dasharray="4 2"/>
+<text x="52" y="132" text-anchor="middle" font-family="Nunito" font-weight="700" font-size="10" fill="#ff6b35">Eerst zelf</text>
+<text x="52" y="146" text-anchor="middle" font-family="Nunito" font-weight="700" font-size="10" fill="#ff6b35">nadenken</text>
+<text x="52" y="158" text-anchor="middle" font-family="Nunito" font-weight="700" font-size="10" fill="#ff6b35">→ terug</text>
+
+<!-- ══════════════════════════════════
+     NODE 3 — DIAMOND 2
+     centre 280,348
+═══════════════════════════════════ -->
+<polygon points="280,296 400,348 280,400 160,348" fill="#1a1a2e" stroke="#ff6b35" stroke-width="2" stroke-dasharray="6 3" filter="url(#glow-orange)"/>
+<text x="280" y="339" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="12" fill="#fff">Kan AI jouw</text>
+<text x="280" y="355" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="12" fill="#fff">vraag beantwoorden?</text>
+
+<!-- YES arrow right → AI node -->
+<line x1="400" y1="348" x2="462" y2="348" stroke="#7bed9f" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#arr-green)"/>
+<!-- YES label -->
+<rect x="406" y="337" width="36" height="18" rx="9" fill="#7bed9f22" stroke="#7bed9f66" stroke-width="1"/>
+<text x="424" y="350" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="11" fill="#7bed9f">Ja</text>
+
+<!-- NO arrow down -->
+<line x1="280" y1="400" x2="280" y2="450" stroke="#ff6b35" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#arr-orange)"/>
+<!-- NO label -->
+<rect x="250" y="414" width="36" height="18" rx="9" fill="#ff6b3522" stroke="#ff6b3566" stroke-width="1"/>
+<text x="268" y="427" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="11" fill="#ff6b35">Nee</text>
+
+<!-- ══════════════════════════════════
+     NODE 4 — AI box (right side, YES branch)
+     x=462 centre, y=295 top, w=170 h=110
+═══════════════════════════════════ -->
+<rect x="462" y="298" width="170" height="100" rx="14" fill="#1a1a2e" stroke="#ffd32a" stroke-width="2" stroke-dasharray="6 3" filter="url(#glow-cyan)"/>
+<text x="547" y="328" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="28" fill="#ffd32a">🤖</text>
+<text x="547" y="353" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="12" fill="#fff">Stel je vraag aan AI</text>
+<text x="547" y="371" text-anchor="middle" font-family="Nunito" font-weight="600" font-size="10.5" fill="#ffffffaa">niet aan mij 😉</text>
+<text x="547" y="388" text-anchor="middle" font-family="Nunito" font-weight="600" font-size="10.5" fill="#ffffffaa">END</text>
+
+<!-- ══════════════════════════════════
+     NODE 5 — TRY AI action
+     centre 280, y=450 top, w=260 h=95
+═══════════════════════════════════ -->
+<rect x="150" y="450" width="260" height="95" rx="14" fill="#1a1a2e" stroke="#a29bfe" stroke-width="2" stroke-dasharray="6 3"/>
+<text x="280" y="480" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="26" fill="#a29bfe">🔎</text>
+<text x="280" y="502" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="12" fill="#fff">Probeer het toch aan AI te vragen</text>
+<text x="280" y="520" text-anchor="middle" font-family="Nunito" font-weight="600" font-size="10.5" fill="#ffffffaa">Als het echt niet lukt → ga verder</text>
+<text x="280" y="534" text-anchor="middle" font-family="Nunito" font-weight="600" font-size="10.5" fill="#ffffffaa">Anders: klaar! ✅</text>
+
+<!-- Arrow down to diamond 3 -->
+<line x1="280" y1="545" x2="280" y2="594" stroke="#a29bfe" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#arr-purple)"/>
+
+<!-- ══════════════════════════════════
+     NODE 6 — DIAMOND 3: Lukte het?
+     centre 280,640
+═══════════════════════════════════ -->
+<polygon points="280,594 400,640 280,686 160,640" fill="#1a1a2e" stroke="#ff6b35" stroke-width="2" stroke-dasharray="6 3" filter="url(#glow-orange)"/>
+<text x="280" y="633" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="12" fill="#fff">Lukte het</text>
+<text x="280" y="649" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="12" fill="#fff">met AI?</text>
+
+<!-- YES arrow right → done -->
+<line x1="400" y1="640" x2="462" y2="640" stroke="#7bed9f" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#arr-green)"/>
+<rect x="407" y="629" width="36" height="18" rx="9" fill="#7bed9f22" stroke="#7bed9f66" stroke-width="1"/>
+<text x="425" y="642" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="11" fill="#7bed9f">Ja</text>
+
+<!-- YES / done node -->
+<rect x="462" y="596" width="130" height="88" rx="14" fill="#1a1a2e" stroke="#7bed9f" stroke-width="2" stroke-dasharray="6 3"/>
+<text x="527" y="626" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="28" fill="#7bed9f">✅</text>
+<text x="527" y="648" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="12" fill="#fff">Klaar!</text>
+<text x="527" y="664" text-anchor="middle" font-family="Nunito" font-weight="600" font-size="10.5" fill="#ffffffaa">Vraag beantwoord</text>
+<text x="527" y="677" text-anchor="middle" font-family="Nunito" font-weight="600" font-size="10.5" fill="#ffffffaa">END</text>
+
+<!-- NO arrow down → come back node -->
+<line x1="280" y1="686" x2="280" y2="734" stroke="#ff6b35" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#arr-orange)"/>
+<rect x="250" y="698" width="36" height="18" rx="9" fill="#ff6b3522" stroke="#ff6b3566" stroke-width="1"/>
+<text x="268" y="711" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="11" fill="#ff6b35">Nee</text>
+
+<!-- ══════════════════════════════════
+     NODE 7 — Kom terug
+     centre 280, y=734 top, w=260 h=90
+═══════════════════════════════════ -->
+<rect x="150" y="734" width="260" height="90" rx="14" fill="#1a1a2e" stroke="#00e5ff" stroke-width="2" stroke-dasharray="6 3" filter="url(#glow-cyan)"/>
+<text x="280" y="762" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="28" fill="#00e5ff">🙋</text>
+<text x="280" y="785" text-anchor="middle" font-family="Nunito" font-weight="800" font-size="12" fill="#fff">Kom terug &amp; stel je vraag</text>
+<text x="280" y="800" text-anchor="middle" font-family="Nunito" font-weight="600" font-size="10.5" fill="#ffffffaa">opnieuw aan mij</text>
+<text x="280" y="815" text-anchor="middle" font-family="Nunito" font-weight="600" font-size="10.5" fill="#ffffffaa">END</text>
+
+<!-- title / watermark -->
+<rect x="10" y="826" width="540" height="26" rx="6" fill="#1a1a2e"/>
+<text x="280" y="844" text-anchor="middle" font-family="Nunito" font-weight="600" font-size="11" fill="#ffffff55">Vraag Stellen Protocol • door AI Flowchart</text>
+```
+
+  </svg>
+</div>
+
 </body>
 </html>
